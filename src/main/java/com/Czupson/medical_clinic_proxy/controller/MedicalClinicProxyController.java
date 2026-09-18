@@ -35,4 +35,15 @@ public class MedicalClinicProxyController {
             @RequestParam(defaultValue = "10") int size) {
         return medicalClinicProxyService.getAvailableAppointmentsForDoctor(doctorId, page, size);
     }
+
+    @GetMapping("/available")
+    public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
+            @RequestParam String specialization,
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return medicalClinicProxyService.getAvailableAppointmentsBySpecialization(
+                specialization, start, end, page, size);
+    }
 }

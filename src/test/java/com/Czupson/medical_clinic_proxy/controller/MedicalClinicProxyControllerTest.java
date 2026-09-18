@@ -83,4 +83,30 @@ class MedicalClinicProxyControllerTest {
                 .andExpect(jsonPath("$.totalPages").value(0));
         verify(medicalClinicProxyService).getAvailableAppointmentsForDoctor(eq(doctorId), eq(page), eq(size));
     }
+
+    @Test
+    void getAvailableAppointmentsBySpecialization_AppointmentsExist_AppointmentsReturned() throws Exception {
+        // given
+        String specialization = "Kardiolog";
+        String start = "2026-10-01T00:00:00";
+        String end = "2026-10-02T00:00:00";
+        int page = 0;
+        int size = 10;
+        PageDto<AppointmentDto> pageDto = new PageDto<>(List.of(), page, size, 0, 0);
+        when(medicalClinicProxyService.getAvailableAppointmentsBySpecialization(specialization, start, end, page, size)).thenReturn(pageDto);
+        // when and then
+        mockMvc.perform(get("/api/proxy/appointments/available")
+                                .param("specialization", specialization)
+                                .param("start", start)
+                                .param("end", end)
+                                .param("page", String.valueOf(page))
+                                .param("size", String.valueOf(size)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty())
+                .andExpect(jsonPath("$.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageSize").value(10))
+                .andExpect(jsonPath("$.totalElements").value(0))
+                .andExpect(jsonPath("$.totalPages").value(0));
+        verify(medicalClinicProxyService).getAvailableAppointmentsBySpecialization(eq(specialization), eq(start), eq(end), eq(page), eq(size));
+    }
 }

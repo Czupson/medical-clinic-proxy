@@ -69,4 +69,22 @@ class MedicalClinicProxyServiceTest {
         assertEquals(expected, result);
         verify(medicalClinicClient).getAvailableAppointmentsForDoctor(doctorId, page, size);
     }
+
+    @Test
+    void getAvailableAppointmentsBySpecialization_ReturnsAppointments() {
+        // given
+        String specialization = "Kardiolog";
+        String start = "2026-10-01T00:00:00";
+        String end = "2026-10-02T00:00:00";
+        int page = 0;
+        int size = 10;
+        PageDto<AppointmentDto> expected = new PageDto<>(List.of(), page, size, 0, 0);
+        when(medicalClinicClient.getAvailableAppointmentsBySpecialization(specialization, start, end, page, size)).thenReturn(expected);
+        // when
+        PageDto<AppointmentDto> result = medicalClinicProxyService.getAvailableAppointmentsBySpecialization(
+                        specialization, start, end, page, size);
+        // then
+        assertEquals(expected, result);
+        verify(medicalClinicClient).getAvailableAppointmentsBySpecialization(specialization, start, end, page, size);
+    }
 }

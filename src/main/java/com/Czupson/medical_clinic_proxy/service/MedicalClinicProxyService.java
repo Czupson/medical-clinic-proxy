@@ -24,4 +24,9 @@ public class MedicalClinicProxyService {
     public PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(Long doctorId, int page, int size) {
         return medicalClinicClient.getAvailableAppointmentsForDoctor(doctorId, page, size);
     }
+
+    public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
+            String specialization, String start, String end, int page, int size) {
+        return medicalClinicClient.getAvailableAppointmentsBySpecialization(specialization, start, end, page, size);
+    }
 }

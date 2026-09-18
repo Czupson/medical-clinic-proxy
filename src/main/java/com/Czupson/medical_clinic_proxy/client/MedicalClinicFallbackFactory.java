@@ -33,6 +33,11 @@ public class MedicalClinicFallbackFactory
             public PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(Long doctorId, int page, int size) {
                 return new PageDto<>(List.of(), page, size, 0, 0);
             }
+
+            @Override
+            public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(String specialization, String start, String end, int page, int size) {
+                return new PageDto<>(List.of(), page, size, 0, 0);
+            }
         };
     }
 }

@@ -39,4 +39,13 @@ public interface MedicalClinicClient {
             @RequestParam int page,
             @RequestParam int size
     );
+
+    @GetMapping("/api/appointments/available")
+    PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
+            @RequestParam String specialization,
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam int page,
+            @RequestParam int size
+    );
 }
