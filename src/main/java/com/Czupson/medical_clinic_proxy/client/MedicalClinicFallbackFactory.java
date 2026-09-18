@@ -1,0 +1,24 @@
+package com.Czupson.medical_clinic_proxy.client;
+
+import com.Czupson.medical_clinic_proxy.dto.PageDto;
+import com.Czupson.medical_clinic_proxy.dto.appointment.AppointmentDto;
+import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class MedicalClinicFallbackFactory
+        implements FallbackFactory<MedicalClinicClient> {
+
+    @Override
+    public MedicalClinicClient create(Throwable cause) {
+        return new MedicalClinicClient() {
+
+            @Override
+            public PageDto<AppointmentDto> getPatientAppointments(Long patientId, int page, int size) {
+                return new PageDto<>(List.of(), page, size, 0, 0);
+            }
+        };
+    }
+}
