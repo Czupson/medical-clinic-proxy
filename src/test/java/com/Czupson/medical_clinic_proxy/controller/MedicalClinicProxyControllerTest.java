@@ -2,6 +2,8 @@ package com.Czupson.medical_clinic_proxy.controller;
 
 import com.Czupson.medical_clinic_proxy.dto.PageDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.AppointmentDto;
+import com.Czupson.medical_clinic_proxy.dto.appointment.BookAppointmentCommand;
+import com.Czupson.medical_clinic_proxy.exception.MedicalClinicUnavailableException;
 import com.Czupson.medical_clinic_proxy.service.MedicalClinicProxyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MedicalClinicProxyController.class)
@@ -46,5 +48,18 @@ class MedicalClinicProxyControllerTest {
                 .andExpect(jsonPath("$.totalElements").value(0))
                 .andExpect(jsonPath("$.totalPages").value(0));
         verify(medicalClinicProxyService).getPatientAppointments(eq(patientId), eq(page), eq(size));
+    }
+
+    @Test
+    void bookAppointment_MedicalClinicUnavailable_Returns503() throws Exception {
+        // given
+        Long appointmentId = 3L;
+        doThrow(new MedicalClinicUnavailableException())
+                .when(medicalClinicProxyService).bookAppointment(eq(appointmentId), any(BookAppointmentCommand.class));
+        // when and then
+        mockMvc.perform(patch("/api/proxy/appointments/{id}/book", appointmentId)
+                        .contentType("application/json")
+                        .content("{\"patientId\":1}"))
+                .andExpect(status().isServiceUnavailable());
     }
 }
