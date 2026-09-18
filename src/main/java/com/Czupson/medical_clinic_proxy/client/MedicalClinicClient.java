@@ -32,4 +32,11 @@ public interface MedicalClinicClient {
             @PathVariable Long id,
             @RequestBody BookAppointmentCommand command
     );
+
+    @GetMapping("/api/appointments/doctor/{doctorId}/available")
+    PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(
+            @PathVariable Long doctorId,
+            @RequestParam int page,
+            @RequestParam int size
+    );
 }

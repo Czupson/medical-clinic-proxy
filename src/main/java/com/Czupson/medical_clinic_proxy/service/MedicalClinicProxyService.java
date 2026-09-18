@@ -20,4 +20,8 @@ public class MedicalClinicProxyService {
     public AppointmentDto bookAppointment(Long id, BookAppointmentCommand command) {
         return medicalClinicClient.bookAppointment(id, command);
     }
+
+    public PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(Long doctorId, int page, int size) {
+        return medicalClinicClient.getAvailableAppointmentsForDoctor(doctorId, page, size);
+    }
 }

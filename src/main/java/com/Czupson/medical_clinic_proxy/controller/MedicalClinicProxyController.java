@@ -27,4 +27,12 @@ public class MedicalClinicProxyController {
             @RequestBody BookAppointmentCommand command) {
         return medicalClinicProxyService.bookAppointment(id, command);
     }
+
+    @GetMapping("/doctor/{doctorId}/available")
+    public PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(
+            @PathVariable Long doctorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return medicalClinicProxyService.getAvailableAppointmentsForDoctor(doctorId, page, size);
+    }
 }

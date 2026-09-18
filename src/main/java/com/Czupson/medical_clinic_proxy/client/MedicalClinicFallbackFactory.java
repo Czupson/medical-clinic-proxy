@@ -28,6 +28,11 @@ public class MedicalClinicFallbackFactory
                     BookAppointmentCommand command) {
                 throw new MedicalClinicUnavailableException();
             }
+
+            @Override
+            public PageDto<AppointmentDto> getAvailableAppointmentsForDoctor(Long doctorId, int page, int size) {
+                return new PageDto<>(List.of(), page, size, 0, 0);
+            }
         };
     }
 }

@@ -62,4 +62,25 @@ class MedicalClinicProxyControllerTest {
                         .content("{\"patientId\":1}"))
                 .andExpect(status().isServiceUnavailable());
     }
+
+    @Test
+    void getAvailableAppointmentsForDoctor_AppointmentsExist_AppointmentsReturned() throws Exception {
+        // given
+        Long doctorId = 1L;
+        int page = 0;
+        int size = 10;
+        PageDto<AppointmentDto> pageDto = new PageDto<>(List.of(), page, size, 0, 0);
+        when(medicalClinicProxyService.getAvailableAppointmentsForDoctor(doctorId, page, size)).thenReturn(pageDto);
+        // when and then
+        mockMvc.perform(get("/api/proxy/appointments/doctor/{doctorId}/available", doctorId)
+                                .param("page", String.valueOf(page))
+                                .param("size", String.valueOf(size)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty())
+                .andExpect(jsonPath("$.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageSize").value(10))
+                .andExpect(jsonPath("$.totalElements").value(0))
+                .andExpect(jsonPath("$.totalPages").value(0));
+        verify(medicalClinicProxyService).getAvailableAppointmentsForDoctor(eq(doctorId), eq(page), eq(size));
+    }
 }
