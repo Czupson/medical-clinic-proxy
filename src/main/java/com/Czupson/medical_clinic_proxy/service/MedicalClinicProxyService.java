@@ -4,6 +4,7 @@ import com.Czupson.medical_clinic_proxy.client.MedicalClinicClient;
 import com.Czupson.medical_clinic_proxy.dto.PageDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.AppointmentDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.BookAppointmentCommand;
+import com.Czupson.medical_clinic_proxy.dto.doctor.DoctorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,37 @@ public class MedicalClinicProxyService {
             String specialization, String start, String end, int page, int size) {
         log.info("Getting available appointments by specialization: specialization={}, start={}, end={}, page={}, size={}", specialization, start, end, page, size);
         PageDto<AppointmentDto> result = medicalClinicClient.getAvailableAppointmentsBySpecialization(
-                        specialization, start, end, page, size);
-        log.info("Retrieved available appointments by specialization: specialization={}, totalElements={}", specialization, result.totalElements());
+                specialization, start, end, page, size);
+        log.info("Retrieved available appointments: specialization={}, totalElements={}", specialization, result.totalElements());
+        return result;
+    }
+
+    public PageDto<DoctorDto> getDoctorsBySpecialization(String specialization, int page, int size) {
+        log.info("Getting doctors by specialization: specialization={}, page={}, size={}", specialization, page, size);
+        PageDto<DoctorDto> result = medicalClinicClient.getDoctorsBySpecialization(specialization, page, size);
+        log.info("Retrieved doctors by specialization: specialization={}, totalElements={}", specialization, result.totalElements());
+        return result;
+    }
+
+    public PageDto<AppointmentDto> getDoctorAppointments(Long doctorId, int page, int size) {
+        log.info("Getting appointments for doctor: doctorId={}, page={}, size={}", doctorId, page, size);
+        PageDto<AppointmentDto> result = medicalClinicClient.getDoctorAppointments(doctorId, page, size);
+        log.info("Retrieved appointments for doctor: doctorId={}, totalElements={}", doctorId, result.totalElements());
+        return result;
+    }
+
+    public void cancelAppointment(Long id) {
+        log.info("Cancelling appointment: appointmentId={}", id);
+        medicalClinicClient.cancelAppointment(id);
+        log.info("Appointment cancelled: appointmentId={}", id);
+    }
+
+    public PageDto<AppointmentDto> getAppointmentsBySpecializationAndTimeRange(
+            String specialization, String start, String end, int page, int size) {
+        log.info("Getting appointments by specialization: specialization={}, start={}, end={}, page={}, size={}", specialization, start, end, page, size);
+        PageDto<AppointmentDto> result = medicalClinicClient.getAppointmentsBySpecializationAndTimeRange(
+                specialization, start, end, page, size);
+        log.info("Retrieved appointments by specialization: specialization={}, totalElements={}", specialization, result.totalElements());
         return result;
     }
 }

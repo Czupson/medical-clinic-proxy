@@ -4,6 +4,7 @@ import com.Czupson.medical_clinic_proxy.dto.ErrorMessageDto;
 import com.Czupson.medical_clinic_proxy.dto.PageDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.AppointmentDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.BookAppointmentCommand;
+import com.Czupson.medical_clinic_proxy.dto.doctor.DoctorDto;
 import com.Czupson.medical_clinic_proxy.service.MedicalClinicProxyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Appointments", description = "Endpoints for managing appointments")
@@ -80,13 +82,76 @@ public class MedicalClinicProxyController {
     })
     @GetMapping("/available")
     public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
-            @RequestParam String specialization,
+            @RequestParam(required = false) String specialization,
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         log.info("GET available appointments by specialization: specialization={}, start={}, end={}, page={}, size={}", specialization, start, end, page, size);
         return medicalClinicProxyService.getAvailableAppointmentsBySpecialization(
+                specialization, start, end, page, size);
+    }
+
+    @GetMapping("/doctors/specialization/{specialization}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get doctors by specialization")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Doctors retrieved successfully"),
+            @ApiResponse(responseCode = "503", description = "Medical clinic service unavailable")
+    })
+    public PageDto<DoctorDto> getDoctorsBySpecialization(
+            @PathVariable String specialization,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        log.info("Getting doctors by specialization: specialization={}, page={}, size={}", specialization, page, size);
+        return medicalClinicProxyService.getDoctorsBySpecialization(specialization, page, size);
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all appointments for a doctor")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Appointments retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Doctor not found"),
+            @ApiResponse(responseCode = "503", description = "Medical clinic service unavailable")
+    })
+    public PageDto<AppointmentDto> getDoctorAppointments(
+            @PathVariable Long doctorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        log.info("Getting appointments for doctor: doctorId={}, page={}, size={}", doctorId, page, size);
+        return medicalClinicProxyService.getDoctorAppointments(doctorId, page, size);
+    }
+
+    @DeleteMapping("/{id}/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Cancel an appointment")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Appointment cancelled"),
+            @ApiResponse(responseCode = "404", description = "Appointment not found"),
+            @ApiResponse(responseCode = "409", description = "Appointment is not booked"),
+            @ApiResponse(responseCode = "503", description = "Medical clinic service unavailable")
+    })
+    public void cancelAppointment(@PathVariable Long id) {
+        log.info("Cancelling appointment: appointmentId={}", id);
+        medicalClinicProxyService.cancelAppointment(id);
+    }
+
+    @GetMapping("/specialization/{specialization}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get appointments by specialization and time range")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Appointments retrieved successfully"),
+            @ApiResponse(responseCode = "503", description = "Medical clinic service unavailable")
+    })
+    public PageDto<AppointmentDto> getAppointmentsBySpecializationAndTimeRange(
+            @PathVariable String specialization,
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        log.info("Getting appointments by specialization: specialization={}, start={}, end={}, page={}, size={}", specialization, start, end, page, size);
+        return medicalClinicProxyService.getAppointmentsBySpecializationAndTimeRange(
                 specialization, start, end, page, size);
     }
 }

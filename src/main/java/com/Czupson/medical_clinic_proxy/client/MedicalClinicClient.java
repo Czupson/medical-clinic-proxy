@@ -4,12 +4,9 @@ import com.Czupson.medical_clinic_proxy.config.FeignConfiguration;
 import com.Czupson.medical_clinic_proxy.dto.PageDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.AppointmentDto;
 import com.Czupson.medical_clinic_proxy.dto.appointment.BookAppointmentCommand;
+import com.Czupson.medical_clinic_proxy.dto.doctor.DoctorDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @FeignClient(
@@ -42,7 +39,33 @@ public interface MedicalClinicClient {
 
     @GetMapping("/api/appointments/available")
     PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
-            @RequestParam String specialization,
+            @RequestParam(required = false) String specialization,
+            @RequestParam String start,
+            @RequestParam String end,
+            @RequestParam int page,
+            @RequestParam int size
+    );
+
+    @GetMapping("/api/doctors/specialization/{specialization}")
+    PageDto<DoctorDto> getDoctorsBySpecialization(
+            @PathVariable String specialization,
+            @RequestParam int page,
+            @RequestParam int size
+    );
+
+    @GetMapping("/api/appointments/doctor/{doctorId}")
+    PageDto<AppointmentDto> getDoctorAppointments(
+            @PathVariable Long doctorId,
+            @RequestParam int page,
+            @RequestParam int size
+    );
+
+    @DeleteMapping("/api/appointments/{id}/cancel")
+    void cancelAppointment(@PathVariable Long id);
+
+    @GetMapping("/api/appointments/specialization/{specialization}")
+    PageDto<AppointmentDto> getAppointmentsBySpecializationAndTimeRange(
+            @PathVariable String specialization,
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam int page,
