@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface MedicalClinicClient {
 
-    @GetMapping("/api/appointments/patient/{patientId}")
+    @GetMapping("/api/appointments")
     PageDto<AppointmentDto> getPatientAppointments(
-            @PathVariable Long patientId,
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam("patientId") Long patientId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
     );
 
     @PatchMapping("/api/appointments/{id}/book")
@@ -37,27 +37,28 @@ public interface MedicalClinicClient {
             @RequestParam int size
     );
 
-    @GetMapping("/api/appointments/available")
+    @GetMapping("/api/appointments")
     PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
-            @RequestParam(required = false) String specialization,
-            @RequestParam String start,
-            @RequestParam String end,
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam("available") boolean available,
+            @RequestParam(value = "specialization", required = false) String specialization,
+            @RequestParam("start") String start,
+            @RequestParam("end") String end,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
     );
 
-    @GetMapping("/api/doctors/specialization/{specialization}")
+    @GetMapping("/api/doctors")
     PageDto<DoctorDto> getDoctorsBySpecialization(
-            @PathVariable String specialization,
+            @RequestParam String specialization,
             @RequestParam int page,
             @RequestParam int size
     );
 
-    @GetMapping("/api/appointments/doctor/{doctorId}")
+    @GetMapping("/api/appointments")
     PageDto<AppointmentDto> getDoctorAppointments(
-            @PathVariable Long doctorId,
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam("doctorId") Long doctorId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
     );
 
     @DeleteMapping("/api/appointments/{id}/cancel")

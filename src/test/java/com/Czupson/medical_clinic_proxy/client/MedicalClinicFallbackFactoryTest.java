@@ -40,7 +40,7 @@ class MedicalClinicFallbackFactoryTest {
     void getAvailableAppointmentsBySpecialization_WhenMedicalClinicUnavailable_ReturnsEmptyPage() {
         MedicalClinicFallbackFactory factory = new MedicalClinicFallbackFactory();
         MedicalClinicClient fallback = factory.create(new RuntimeException("Medical Clinic unavailable"));
-        PageDto<AppointmentDto> result = fallback.getAvailableAppointmentsBySpecialization("Kardiolog",
+        PageDto<AppointmentDto> result = fallback.getAvailableAppointmentsBySpecialization(true ,"Kardiolog",
                 "2026-10-01T00:00:00", "2026-10-02T00:00:00", 0, 10);
         assertTrue(result.content().isEmpty());
         assertEquals(0, result.totalElements());

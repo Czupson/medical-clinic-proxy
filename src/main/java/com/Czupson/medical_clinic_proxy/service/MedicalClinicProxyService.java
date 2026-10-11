@@ -38,10 +38,14 @@ public class MedicalClinicProxyService {
     }
 
     public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
-            String specialization, String start, String end, int page, int size) {
+            String specialization,
+            String start,
+            String end,
+            int page,
+            int size) {
         log.info("Getting available appointments by specialization: specialization={}, start={}, end={}, page={}, size={}", specialization, start, end, page, size);
         PageDto<AppointmentDto> result = medicalClinicClient.getAvailableAppointmentsBySpecialization(
-                specialization, start, end, page, size);
+                        true, specialization, start, end, page, size);
         log.info("Retrieved available appointments: specialization={}, totalElements={}", specialization, result.totalElements());
         return result;
     }

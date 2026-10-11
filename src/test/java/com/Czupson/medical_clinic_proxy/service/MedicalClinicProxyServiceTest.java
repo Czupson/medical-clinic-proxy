@@ -81,13 +81,13 @@ class MedicalClinicProxyServiceTest {
         int page = 0;
         int size = 10;
         PageDto<AppointmentDto> expected = new PageDto<>(List.of(), page, size, 0, 0);
-        when(medicalClinicClient.getAvailableAppointmentsBySpecialization(specialization, start, end, page, size)).thenReturn(expected);
+        when(medicalClinicClient.getAvailableAppointmentsBySpecialization(true, specialization, start, end, page, size)).thenReturn(expected);
         // when
         PageDto<AppointmentDto> result = medicalClinicProxyService.getAvailableAppointmentsBySpecialization(
                         specialization, start, end, page, size);
         // then
         assertEquals(expected, result);
-        verify(medicalClinicClient).getAvailableAppointmentsBySpecialization(specialization, start, end, page, size);
+        verify(medicalClinicClient).getAvailableAppointmentsBySpecialization(true, specialization, start, end, page, size);
     }
 
     @Test
@@ -155,10 +155,10 @@ class MedicalClinicProxyServiceTest {
                 LocalDateTime.of(2026, 10, 1, 11, 30), 1L, null);
         PageDto<AppointmentDto> expected = new PageDto<>(List.of(appointment), page, size, 1, 1);
         when(medicalClinicClient.getAvailableAppointmentsBySpecialization(
-                null, start, end, page, size)).thenReturn(expected);
+                true, null, start, end, page, size)).thenReturn(expected);
         PageDto<AppointmentDto> result = medicalClinicProxyService.getAvailableAppointmentsBySpecialization(
                 null, start, end, page, size);
         assertEquals(expected, result);
-        verify(medicalClinicClient).getAvailableAppointmentsBySpecialization(null, start, end, page, size);
+        verify(medicalClinicClient).getAvailableAppointmentsBySpecialization(true, null, start, end, page, size);
     }
 }

@@ -36,9 +36,11 @@ public class MedicalClinicFallbackFactory
             }
 
             @Override
-            public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(String specialization, String start, String end, int page, int size) {
+            public PageDto<AppointmentDto> getAvailableAppointmentsBySpecialization(
+                    boolean available, String specialization, String start, String end, int page, int size) {
                 return new PageDto<>(List.of(), page, size, 0, 0);
             }
+
 
             @Override
             public PageDto<DoctorDto> getDoctorsBySpecialization(String specialization, int page, int size) {
